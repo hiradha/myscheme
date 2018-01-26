@@ -44,6 +44,7 @@
 (define (inc n) (+ n 1))
 (define (factorial n)
   (product identity 1 inc n))
+; Compute factorial using factorial function
 (factorial 5)
 (factorial 6)
 ; John Wallis pi approximation formula
@@ -68,7 +69,7 @@
 (define (factorial-iter n)
   (product-iter identity 1 inc n))
 
-; Invoke factorial using iterative version
+; Compute factorial using iterative version
 (factorial-iter 5)
 (factorial-iter 6)
 
@@ -79,18 +80,44 @@
       (combiner (accumulate combiner null-value term (next a) next b) (term a))
   )
   )
+(define (sumcombiner accumulatedresult x) (+ accumulatedresult x))
+
 (define (sum-accumulator term a next b)
-  (define (sumcombiner accumulatedresult x) (+ accumulatedresult x))
   (accumulate sumcombiner 0 term a next b) )
 
+(define (productcombiner accumulatedresult x) (* accumulatedresult x))
 (define (product-accumulator term a next b)
-  (define (productcombiner accumulatedresult x) (* accumulatedresult x))
   (accumulate productcombiner 1 term a next b)
   )
 (define (factorial-using-accumulate n)
   (product-accumulator identity 1 inc n))
+; Compute factorial using accumulate
 (factorial-using-accumulate 5)
 (factorial-using-accumulate 6)
+
+; iterative accumulate and functions based off it
+(define (accumulate-iterative combiner null-value term a next b)
+  (define (loop combiner a term next b accumulatedvalue)
+    (if (> a b)
+       accumulatedvalue
+       (loop combiner (next a) term next b (combiner accumulatedvalue (term a)))))
+  (loop combiner a term next b null-value)
+  )
+
+(define (sum-accumulator-iterative term a next b)
+  (accumulate-iterative sumcombiner 0 term a next b)
+  )
+
+(define (product-accumulator-iterative term a next b)
+  (accumulate-iterative productcombiner 1 term a next b)
+  )
+
+(define (factorial-using-accumulate-iterative n)
+  (product-accumulator-iterative identity 1 inc n))
+; Compute factorial usig iterative accumulate function as base
+(factorial-using-accumulate-iterative 5)
+(factorial-using-accumulate-iterative 6)
+  
 
 
   
