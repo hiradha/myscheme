@@ -97,11 +97,11 @@
 
 ; iterative accumulate and functions based off it
 (define (accumulate-iterative combiner null-value term a next b)
-  (define (loop combiner a term next b accumulatedvalue)
+  (define (loop a accumulatedvalue)
     (if (> a b)
        accumulatedvalue
-       (loop combiner (next a) term next b (combiner accumulatedvalue (term a)))))
-  (loop combiner a term next b null-value)
+       (loop (next a) (combiner accumulatedvalue (term a)))))
+  (loop a null-value)
   )
 
 (define (sum-accumulator-iterative term a next b)
