@@ -1,4 +1,5 @@
 #lang racket
+(require math/number-theory)
 
 (define (cube x) (* x x x))
 ; Recursive sum
@@ -117,7 +118,53 @@
 ; Compute factorial usig iterative accumulate function as base
 (factorial-using-accumulate-iterative 5)
 (factorial-using-accumulate-iterative 6)
+
+
+; accumulate recursive with filter
+(define (filtered-accumulate combiner null-value term a next b filter)
+  (if (> a b)
+      null-value
+      (if (filter (term a))
+          (combiner (filtered-accumulate combiner null-value term (next a) next b filter) (term a))
+          (combiner (filtered-accumulate combiner null-value term (next a) next b filter) null-value )
+          )
+          )
+  )
+
+
+(define (square x) (* x x))
+; for now let's assume every number is prime
+(define (prime? x)
+  x
+  )
+; ; Sum of squares of primes in interval a b
+(define (sum_square_primes a b)
+(filtered-accumulate sumcombiner 0 square a inc b prime?)
+  )
+
+;(sum_square_primes 1 5)
+
+(define (sum_relative_primes n)
+  ; Tell whether the parameter i and closed variable n are relatively prime; For now just pretend we have th
+  ; this function and just return number
+  (define (relativeprime? i)
+    (if (= 1 (gcd i n) )
+        #t
+        #f
+    )
+    )
+  (filtered-accumulate productcombiner 1 identity 1 inc n relativeprime?))
+(= 1 (gcd 1 4))
+(= 1 (gcd 2 4))
+(= 1 (gcd 3 4))
+(= 1 (gcd 4 4))
+(sum_relative_primes 8)
+
+
+
   
+
+
 
 
   
